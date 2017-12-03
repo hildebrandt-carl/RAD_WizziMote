@@ -33,8 +33,8 @@ PROCESS_THREAD(main_process, ev, data)
 	static int loopCount = 0;
 
 	// Set up virtual clock timer
-	TA1CTL = TASSEL0 + TAIE + MC0;
-	TA1CCR0 = 0x0800;
+	TA1CTL = TASSEL0 + TAIE + MC0; // ACLK @ 32 kHz
+	TA1CCR0 = 0x0400; // top value = 1024 -> interrupt at 64 Hz
 	TA1CCTL0 = CCIE;
 
 	// Start receiving over radio
@@ -51,7 +51,7 @@ PROCESS_THREAD(main_process, ev, data)
 	{
 		// Status log TODO: needed?
 		loopCount++;	
-		char* counterStr[50];
+		char counterStr[50];
 		sprintf(counterStr,"System has been running for %d seconds.",loopCount);
 		statusLog(counterStr);
 
@@ -108,7 +108,7 @@ PROCESS_THREAD(main_process, ev, data)
 
 		// Check for a scheduled hit
 		uint32_t clk;
-		if(!readFIFO(&clk)){ // fifo not empty
+		if(!readFifo(&clk)){ // fifo not empty
 			if(clk == virtualClock){
 				playNow = 1;
 			}
@@ -147,7 +147,7 @@ __interrupt void Timer1A0ISR(void)
 {
 	virtualClock++;
 	printf("%d\r\n", virtualClock);
-	char* debugStr[50];
+	char debugStr[50];
 	sprintf(debugStr,"In the interrupt, clock is %d",virtualClock);
 	statusLog(debugStr);
 }

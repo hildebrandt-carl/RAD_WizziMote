@@ -2686,7 +2686,7 @@ Disassembly of section .text:
     9c10:	04 12       	push	r4		
     9c12:	04 41       	mov	r1,	r4	
     9c14:	24 52       	add	#4,	r4	;r2 As==10
-    9c16:	31 50 9c ff 	add	#-100,	r1	;#0xff9c
+    9c16:	31 50 ce ff 	add	#-50,	r1	;#0xffce
     9c1a:	0b 4f       	mov	r15,	r11	
     9c1c:	2f 4f       	mov	@r15,	r15	
     9c1e:	3f 90 47 00 	cmp	#71,	r15	;#0x0047
@@ -2720,7 +2720,7 @@ Disassembly of section .text:
     9c74:	b0 12 e2 9b 	call	#0x9be2	
     9c78:	b2 40 12 01 	mov	#274,	&0x0380	;#0x0112
     9c7c:	80 03 
-    9c7e:	b2 40 00 08 	mov	#2048,	&0x0392	;#0x0800
+    9c7e:	b2 40 00 04 	mov	#1024,	&0x0392	;#0x0400
     9c82:	92 03 
     9c84:	b2 40 10 00 	mov	#16,	&0x0382	;#0x0010
     9c88:	82 03 
@@ -2734,13 +2734,13 @@ Disassembly of section .text:
     9ca2:	82 4f d8 20 	mov	r15,	&0x20d8	
     9ca6:	0f 12       	push	r15		
     9ca8:	30 12 c5 ad 	push	#-21051	;#0xadc5
-    9cac:	3f 40 98 ff 	mov	#-104,	r15	;#0xff98
+    9cac:	3f 40 ca ff 	mov	#-54,	r15	;#0xffca
     9cb0:	0f 54       	add	r4,	r15	
     9cb2:	0f 12       	push	r15		
     9cb4:	b0 12 fa a0 	call	#0xa0fa	
     9cb8:	31 50 06 00 	add	#6,	r1	;#0x0006
     9cbc:	0f 44       	mov	r4,	r15	
-    9cbe:	3f 50 98 ff 	add	#-104,	r15	;#0xff98
+    9cbe:	3f 50 ca ff 	add	#-54,	r15	;#0xffca
     9cc2:	b0 12 e2 9b 	call	#0x9be2	
     9cc6:	f2 d0 40 00 	bis.b	#64,	&0x0222	;#0x0040
     9cca:	22 02 
@@ -2780,7 +2780,7 @@ Disassembly of section .text:
     9d38:	7f 40 03 00 	mov.b	#3,	r15	;#0x0003
     9d3c:	01 3c       	jmp	$+4      	;abs 0x9d40
     9d3e:	5f 43       	mov.b	#1,	r15	;r3 As==01
-    9d40:	31 50 64 00 	add	#100,	r1	;#0x0064
+    9d40:	31 50 32 00 	add	#50,	r1	;#0x0032
     9d44:	34 41       	pop	r4		
     9d46:	3b 41       	pop	r11		
     9d48:	30 41       	ret			
@@ -2790,7 +2790,7 @@ Disassembly of section .text:
     9d4c:	04 12       	push	r4		
     9d4e:	04 41       	mov	r1,	r4	
     9d50:	34 50 0a 00 	add	#10,	r4	;#0x000a
-    9d54:	31 50 9c ff 	add	#-100,	r1	;#0xff9c
+    9d54:	31 50 ce ff 	add	#-50,	r1	;#0xffce
     9d58:	1e 42 d4 20 	mov	&0x20d4,r14	
     9d5c:	1f 42 d6 20 	mov	&0x20d6,r15	
     9d60:	1e 53       	inc	r14		
@@ -2807,15 +2807,15 @@ Disassembly of section .text:
     9d86:	1f 42 d6 20 	mov	&0x20d6,r15	
     9d8a:	1f 15       	pushm	#2,	r15	
     9d8c:	30 12 08 ae 	push	#-20984	;#0xae08
-    9d90:	3f 40 92 ff 	mov	#-110,	r15	;#0xff92
+    9d90:	3f 40 c4 ff 	mov	#-60,	r15	;#0xffc4
     9d94:	0f 54       	add	r4,	r15	
     9d96:	0f 12       	push	r15		
     9d98:	b0 12 fa a0 	call	#0xa0fa	
     9d9c:	31 52       	add	#8,	r1	;r2 As==11
     9d9e:	0f 44       	mov	r4,	r15	
-    9da0:	3f 50 92 ff 	add	#-110,	r15	;#0xff92
+    9da0:	3f 50 c4 ff 	add	#-60,	r15	;#0xffc4
     9da4:	b0 12 e2 9b 	call	#0x9be2	
-    9da8:	31 50 64 00 	add	#100,	r1	;#0x0064
+    9da8:	31 50 32 00 	add	#50,	r1	;#0x0032
     9dac:	34 41       	pop	r4		
     9dae:	3c 17       	popm	#4,	r15	
     9db0:	00 13       	reti			
