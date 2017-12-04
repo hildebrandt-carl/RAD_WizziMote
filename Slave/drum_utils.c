@@ -1,9 +1,6 @@
 #include "drum_utils.h"
 #include <stdint.h>
 
-//TODO: figure out how this actually works
-
-
 // Code based off ThatOneTeam's code from last year
 static uint8_t hitLeft = 0x0;
 void hitDrum(){

@@ -60,14 +60,14 @@ PROCESS_THREAD(main_process, ev, data)
 		hitDrum();
 		printf("hit drum\r\n");
 
-		etimer_set(&et, 1*CLOCK_SECOND);
+		etimer_set(&et, 0.05*CLOCK_SECOND);
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
 		G_OFF();
 		unhitDrum();
 		printf("unhit drum\r\n");
 
-		etimer_set(&et, 5*CLOCK_SECOND); //hit every 5 seconds for now
+		etimer_set(&et, 0.45*CLOCK_SECOND); //hit every 5 seconds for now
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 		//end TEST HITTING DRUM
 		kickWatchdog(); //TODO
