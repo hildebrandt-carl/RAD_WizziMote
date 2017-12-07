@@ -28,6 +28,8 @@ PROCESS_THREAD(main_process, ev, data)
 	R_OFF(); R_OUT();
 	Y_OFF(); Y_OUT();
 
+	Y_ON();
+
 	// Begin status logging
 	statusLog("Starting up the system RAD_TEAM");
 	static int loopCount = 0;
@@ -47,35 +49,53 @@ PROCESS_THREAD(main_process, ev, data)
 	P1DIR |= LEFT_R;
 	P2DIR = RIGHT_H + RIGHT_R;
 
+	//light_inverter variable
+	int inverter = 0;
+
+	statusLog("Started");
 	while(1)
 	{
 		// Status log TODO: needed?
 		loopCount++;	
 		char counterStr[50];
-		sprintf(counterStr,"System has been running for %d seconds.",loopCount);
-		statusLog(counterStr);
+		//sprintf(counterStr,"System has been running for %d seconds.",loopCount);
+		//statusLog(counterStr);
 
 		// TEST HITTING THE DRUM
-		G_ON();
-		hitDrum();
-		printf("hit drum\r\n");
+		//G_ON();
+		//hitDrum();
+		//printf("hit drum\r\n");
 
-		etimer_set(&et, 0.05*CLOCK_SECOND);
-		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+		//etimer_set(&et, 0.05*CLOCK_SECOND);
+		//PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-		G_OFF();
-		unhitDrum();
-		printf("unhit drum\r\n");
+		//G_OFF();
+		//unhitDrum();
+		//printf("unhit drum\r\n");
 
-		etimer_set(&et, 0.45*CLOCK_SECOND); //hit every 5 seconds for now
-		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+		//etimer_set(&et, 0.45*CLOCK_SECOND); //hit every 5 seconds for now
+		//PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 		//end TEST HITTING DRUM
+
 		kickWatchdog(); //TODO
 
 		// Process received wizzimote messages
-	/*	getReceivedMessage(msg);
+		getReceivedMessage(msg);
+		printf(msg);
+		
 		if(strcmp(msg,oldReceivedMsg) != 0)
 		{
+			statusLog("Recieved a message");
+			if(inverter == 0)
+			{
+				G_ON();
+				inverter = 1 ;
+			}
+			else
+			{
+				inverter = 0;
+				G_OFF();
+			}
 			strcpy(oldReceivedMsg,msg);
 			if(msg[0] == CLKREQ) // clock request message, for synchronization
 			{
@@ -119,7 +139,7 @@ PROCESS_THREAD(main_process, ev, data)
 			hitDrum();
 			playNow = 0;
 		}
-		*/
+		
 		
 	}
 	PROCESS_END();
@@ -146,8 +166,8 @@ void updateClock(uint32_t adjustment){
 __interrupt void Timer1A0ISR(void)
 {
 	virtualClock++;
-	printf("%d\r\n", virtualClock);
+	//printf("%d\r\n", virtualClock);
 	char debugStr[50];
-	sprintf(debugStr,"In the interrupt, clock is %d",virtualClock);
-	statusLog(debugStr);
+	//sprintf(debugStr,"In the interrupt, clock is %d",virtualClock);
+	//statusLog(debugStr);
 }
