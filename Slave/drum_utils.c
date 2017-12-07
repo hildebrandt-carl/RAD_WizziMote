@@ -8,14 +8,19 @@ void hitDrum(){
         {
                 LEFT_PORT |= LEFT_H;
                 LEFT_PORT &= ~LEFT_R;
+                RIGHT_PORT &= ~RIGHT_H;
+                RIGHT_PORT |= RIGHT_R;
 		R_ON();
         }
         else
         {
                 RIGHT_PORT |= RIGHT_H;
                 RIGHT_PORT &= ~RIGHT_R;
-                Y_ON();
+                LEFT_PORT &= ~LEFT_H;
+                LEFT_PORT |= LEFT_R;
+                R_OFF();
         }
+        hitLeft = !hitLeft;
 }
 
 void unhitDrum(){
