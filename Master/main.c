@@ -54,8 +54,8 @@ PROCESS_THREAD(main_process, ev, data)
 		// Status log TODO: needed?
 		loopCount++;	
 		char counterStr[50];
-		sprintf(counterStr,"System has been running for %d seconds.",loopCount);
-		statusLog(counterStr);
+		//sprintf(counterStr,"System has been running for %d seconds.",loopCount);
+		//statusLog(counterStr);
 
 		// Process received wizzimote messages
 		getReceivedMessage(msg);
@@ -68,20 +68,24 @@ PROCESS_THREAD(main_process, ev, data)
 				uint32_t slaveTime = *((uint32_t*)(&msg[2]));
 				uint32_t diff = ((sentTime + virtualClock) / 2) - slaveTime;
 				// send SETCLK msg
-				char returnMsg[7];
+				char returnMsg[6];
 				returnMsg[0] = SETCLK;
 				*((uint32_t*)(&returnMsg[2])) = diff;  //TODO: right?
-				unicast_send(returnMsg,7, 4); //TODO: set dest ID
+				unicast_send(returnMsg,6, 5); //TODO: set dest ID
 			}
 			else if(msg[0] == (ACK))
 			{
 				//sentSchdlMsg TODO(low priority)
 			}
 		}
-		
+		//GENERATE MESSAGES FOR TESTING
+		while(virtualClock % 64 == 0){ gotUartMessage = 1;}
+		uartMessage[0] = 0;
+ 		uartMessage[1] = 0xE;
 		// Process received UART messages
 		if(gotUartMessage)
-		{
+		{	Y_T();
+			kickWatchdog();
 			// Set clock message
 			if(uartMessage[0] == SETCLK)
 			{
@@ -94,26 +98,31 @@ PROCESS_THREAD(main_process, ev, data)
 			{
 				//store into sentSchdlMsg TODO(low priority)
 				int i=0;
-				for(i=0; i<7; i++){ sentSchdlMsg[i] = uartMessage[i]; }
+				for(i=0; i<6; i++){ sentSchdlMsg[i] = uartMessage[i]; }
 				//start ack timer TODO(low priority)
-				broadcast_send(uartMessage, 7);// broadcast msg TODO: right?
+				broadcast_send(uartMessage, 6);// broadcast msg TODO: right?
 			}
 			// Play now message
 			else if(uartMessage[0] == 0x0)
 			{
-				broadcast_send(uartMessage, 7);// broadcast msg TODO: right?
+				//broadcast_send(uartMessage, 6);// broadcast msg TODO: right?
+				broadcast_send("Hi there",8);				
+				debugLog("Sending hit now message");
 			}
+			gotUartMessage = 0;
 		}
-		
+
 		// Synchronize wizzimotes
 		if(timeToSync)
 		{
 			uint8_t msg[6];
 			msg[0] = CLKREQ;
-			broadcast_send(msg, 7);// broadcast msg TODO: right?
+			//broadcast_send(msg, 6);// broadcast msg TODO: right?
+			broadcast_send("Hello", 6);			
 			//TODO: disable interrupts
 			sentTime = virtualClock;
 			timeToSync = 0;
+			debugLog("Synchronizing wizzimotes");
 		}
 	} //end while loop
 	PROCESS_END();
@@ -129,5 +138,5 @@ __interrupt void Timer1A0ISR(void)
 	}
 	char debugStr[50];
 	sprintf(debugStr,"In the interrupt, clock is %d", virtualClock);
-	debugLog(debugStr);
+	//debugLog(debugStr);
 }
