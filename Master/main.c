@@ -13,6 +13,9 @@ volatile uint8_t uartMessage[6]; 	// set in interrupt handler
 static uint8_t sentSchdlMsg[6];		// used to make sure SCHDL messages get ACKs TODO(low priority)
 static char debugStr[50];
 
+// Functions
+int rx_handler(unsigned char c);
+
 PROCESS(main_process, "Main Task");
 AUTOSTART_PROCESSES(&main_process);
 
@@ -44,8 +47,8 @@ PROCESS_THREAD(main_process, ev, data)
 	static uint8_t newMsgCnt = -1;
 	rf1a_start_rx();
 	
-	//TODO: set up UART
-	
+	// set up UART - register handler function to contiki's uart code
+	uart_set_input_handler(rx_handler);
 
 	// Set up the ack timer to a given interval..? but don't run it yet...
 	//TODO(low priority)
@@ -99,6 +102,8 @@ PROCESS_THREAD(main_process, ev, data)
 		cnt = newCnt;
 		uartMessage[0] = SCHDL;
 		uartMessage[1] = SNARE;
+		
+		UCA0IE |= UCRXIE;
 		
 		// Process received UART messages
 		if(gotUartMessage)
@@ -163,4 +168,48 @@ __interrupt void Timer1A0ISR(void)
 	}
 	sprintf(debugStr,"In the interrupt, clock is %d", virtualClock);
 	//debugLog(debugStr);
+}
+
+#define IDLE 0
+#define DATA 1
+#define CHKSUM 2
+#define START_BYTE 0xFF
+volatile static uint8_t dataCnt = 0;
+volatile static uint8_t checksum = 0;
+volatile static uint8_t state = IDLE;
+volatile static uint8_t workingMessage[6];
+int rx_handler(unsigned char c)
+{
+	uint8_t byte = (uint8_t)c;
+	//debug info
+	sprintf(debugStr,"Received UART character %d", byte);
+	debugLog(debugStr);
+	//receive msg state machine
+	if(state == IDLE)
+	{
+		if(byte == START_BYTE)
+		{
+			state = DATA;
+			dataCnt = 0;
+			checksum = 0;
+		}
+	}
+	else if(state == DATA)
+	{
+		workingMessage[dataCnt] = byte;
+		dataCnt++;
+		checksum += byte;
+		if(dataCnt >= 6){ state = CHKSUM; }
+	}
+	else if(state == CHKSUM)
+	{
+		if(checksum == byte)
+		{
+			gotUartMessage = 1;
+			int i=0; for(i=0; i<6; i++){ uartMessage[i] = workingMessage[i]; }
+			debugLog("Received a full UART message!");
+		}
+		state = IDLE;
+	}
+	return 0;
 }
