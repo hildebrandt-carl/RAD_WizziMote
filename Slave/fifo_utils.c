@@ -1,12 +1,14 @@
 #include "fifo_utils.h"
 
-static uint32_t fifo[256];
-static uint8_t rdAddr = 0;
-static uint8_t wrAddr = 0;
-static uint8_t entries = 0;
+#define QUEUE_SIZE 512
+
+static uint32_t fifo[QUEUE_SIZE];
+static uint16_t rdAddr = 0;
+static uint16_t wrAddr = 0;
+static uint16_t entries = 0;
 
 int writeFifo(uint32_t val){
-	if(entries < 256){
+	if(entries < QUEUE_SIZE){
 		fifo[wrAddr] = val;
 		wrAddr++;
 		entries++;
