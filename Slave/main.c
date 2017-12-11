@@ -29,8 +29,6 @@ PROCESS_THREAD(main_process, ev, data)
 	R_OFF(); R_OUT();
 	Y_OFF(); Y_OUT();
 
-	G_ON();
-
 	// Begin status logging
 	statusLog("Starting up the system RAD_TEAM");
 
@@ -52,7 +50,7 @@ PROCESS_THREAD(main_process, ev, data)
 
 	while(1)
 	{
-		kickWatchdog(); //TODO
+		kickWatchdog();
 
 		// Process received wizzimote messages
 		getReceivedMessage(msg, &newMsgCnt);
@@ -155,6 +153,7 @@ PROCESS_THREAD(main_process, ev, data)
 		#endif
 		// Play drum, if applicable
 		if(playNow == 1){
+			R_T();
 			playNow = 0;
 			if(stickStatus == READY){
 				hitDrum(1);
@@ -192,4 +191,5 @@ void updateClock(uint32_t adjustment){
 __interrupt void Timer1A0ISR(void)
 {
 	virtualClock++;
+	if(virtualClock % 32 == 0){ G_T(); } // heart beat
 }
