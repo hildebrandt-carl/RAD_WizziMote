@@ -114,8 +114,8 @@ PROCESS_THREAD(main_process, ev, data)
 
 		// Check for a scheduled hit
 		uint32_t clk;
-		peekFifo(&clk);
-		if(clk == virtualClock){
+		int failure = peekFifo(&clk);
+		if(!failure && (clk == virtualClock)){
 			playNow = 1;
 			readFifo(&clk);
 			debugLog("Playing from the FIFO queue.");
@@ -175,13 +175,11 @@ void updateClock(uint32_t adjustment){
 	// if skipping forward, discard any skipped entries from FIFO queue 
 	if(newValue > oldValue){
 		uint32_t clk;
-		if(!peekFifo(&clk))
-		{
-			while(clk < newValue){
-				playNow = 1;    // if we skip an entry, play now to make up for it
-				readFifo(&clk); // discard skipped entry
-				peekFifo(&clk); // peek next entry
-			}
+		int failure = peekFifo(&clk);
+		while(!failure && (clk < newValue)){
+			playNow = 1;    // if we skip an entry, play now to make up for it
+			readFifo(&clk); // discard skipped entry
+			failure = peekFifo(&clk); // peek next entry
 		}
 	}
 	virtualClock = newValue; // update clock
