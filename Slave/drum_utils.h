@@ -8,8 +8,11 @@
 //single stick instruments
 #if MY_ID == BASS
   #define SINGLE_STICK
-#elif MY_ID == HIHAT
+#elif MY_ID == CYMBAL
   #define SINGLE_STICK
+#elif MY_ID == HITOM
+  #define SINGLE_STICK
+//the rest are double stick
 #else
   #define DOUBLE_STICK
 #endif
